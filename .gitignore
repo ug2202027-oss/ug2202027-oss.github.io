@@ -3,6 +3,9 @@
 *.sqlite
 *.db
 
+# Keep schema file
+!schema.sql
+
 # Environment
 .env
 .env.local
