@@ -1,0 +1,26 @@
+# Database
+*.sql
+*.sqlite
+*.db
+
+# Environment
+.env
+.env.local
+
+# Uploads (user-generated content)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
