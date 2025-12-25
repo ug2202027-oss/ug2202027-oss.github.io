@@ -12,23 +12,23 @@ $bricks = [];
 if ($q !== '') {
     $like = '%' . $q . '%';
     $sellerId = ctype_digit($q) ? (int)$q : 0;
-  $whereParts = [
-    'b.name LIKE ?',
-    'b.description LIKE ?',
-    'u.username LIKE ?',
-  ];
-  $params = [$like, $like, $like];
-  $types = 'sss';
-  if ($hasDistrict) {
-    $whereParts[] = 'u.district LIKE ?';
-    $params[] = $like;
-    $types .= 's';
-  }
-  $whereParts[] = 'u.id = ?';
-  $params[] = $sellerId;
-  $types .= 'i';
+    $whereParts = [
+        'b.name LIKE ?',
+        'b.description LIKE ?',
+        'u.username LIKE ?',
+    ];
+    $params = [$like, $like, $like];
+    $types = 'sss';
+    if ($hasDistrict) {
+        $whereParts[] = 'u.district LIKE ?';
+        $params[] = $like;
+        $types .= 's';
+    }
+    $whereParts[] = 'u.id = ?';
+    $params[] = $sellerId;
+    $types .= 'i';
 
-  $stmt = $mysqli->prepare("
+    $stmt = $mysqli->prepare("
         SELECT b.*, u.username as seller_name
         FROM bricks b
         JOIN users u ON b.seller_id = u.id
@@ -37,11 +37,10 @@ if ($q !== '') {
       AND (" . implode(' OR ', $whereParts) . ")
         ORDER BY b.created_at DESC
     ");
-  $bricks = [];
-  stmt_bind_params($stmt, $types, $params);
-  if ($stmt->execute()) {
-    $bricks = stmt_fetch_all_assoc($stmt);
-  }
+    stmt_bind_params($stmt, $types, $params);
+    if ($stmt->execute()) {
+        $bricks = stmt_fetch_all_assoc($stmt);
+    }
 } else {
   $res = $mysqli->query("SELECT b.*, u.username as seller_name FROM bricks b JOIN users u ON b.seller_id = u.id WHERE b.quantity > 0$sellerStatusClause ORDER BY b.created_at DESC LIMIT 24");
   $bricks = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];

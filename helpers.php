@@ -25,6 +25,10 @@ function esc($str) {
  */
 function db_has_column($table, $column) {
     global $mysqli;
+    // Validate table and column names to prevent SQL injection
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $table) || !preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+        return false;
+    }
     $result = $mysqli->query("SHOW COLUMNS FROM `$table` LIKE '$column'");
     return $result && $result->num_rows > 0;
 }
