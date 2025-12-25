@@ -1,0 +1,29 @@
+# Database
+*.sql
+*.sqlite
+*.db
+
+# Keep schema file
+!schema.sql
+
+# Environment
+.env
+.env.local
+
+# Uploads (user-generated content)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
