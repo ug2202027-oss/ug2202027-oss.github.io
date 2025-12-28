@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-content">
+                    <div class="contact-info">
+                        <span><i class="fas fa-phone"></i> +880 1234-567890</span>
+                    </div>
+                    <div class="user-actions">
+                        <span id="userGreeting">Welcome, <span id="userName"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <a href="../index.html">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>BrickBD</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Checkout Content -->
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="cart.html">Cart</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Checkout</span>
+        </div>
+
+        <h1 class="page-title">Checkout</h1>
+
+        <div class="checkout-page">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <form id="checkoutForm" onsubmit="handleCheckout(event)">
+                    <!-- Shipping Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-shipping-fast"></i> Shipping Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="address">Street Address *</label>
+                                <input type="text" id="address" required placeholder="House no., Street name">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="district">District *</label>
+                                <input type="text" id="district" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">Postal Code</label>
+                                <input type="text" id="zipCode" placeholder="Optional">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="cod" checked>
+                                <div class="payment-content">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <div>
+                                        <strong>Cash on Delivery</strong>
+                                        <p>Pay when you receive the product</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="card">
+                                <div class="payment-content">
+                                    <i class="fas fa-credit-card"></i>
+                                    <div>
+                                        <strong>Credit/Debit Card</strong>
+                                        <p>Visa, Mastercard, American Express</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="bkash">
+                                <div class="payment-content">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <strong>bKash</strong>
+                                        <p>Pay via bKash mobile wallet</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="nagad">
+                                <div class="payment-content">
+                                    <i class="fas fa-wallet"></i>
+                                    <div>
+                                        <strong>Nagad</strong>
+                                        <p>Pay via Nagad mobile wallet</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-sticky-note"></i> Additional Notes</h3>
+                        <div class="form-group">
+                            <textarea id="notes" rows="4" placeholder="Any special instructions for delivery..."></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-large">
+                        <i class="fas fa-check-circle"></i> Place Order
+                    </button>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                
+                <div class="summary-items" id="summaryItems">
+                    <!-- Items will be loaded here -->
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="summarySubtotal">৳0</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span id="summaryShipping">৳0</span>
+                </div>
+                
+                <div class="summary-row discount" id="summaryDiscountRow" style="display: none;">
+                    <span>Discount</span>
+                    <span id="summaryDiscount">-৳0</span>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="summaryTotal">৳0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 BrickBD. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        const SHIPPING_FEE = 60;
+        const FREE_SHIPPING_THRESHOLD = 500;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const user = Storage.getCurrentUser();
+            if (!user) {
+                showAlert('Please login to checkout', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+
+            // Check if cart is empty
+            const cart = Storage.getCart();
+            if (cart.length === 0) {
+                showAlert('Your cart is empty!', 'info');
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 1500);
+                return;
+            }
+
+            // Load user data
+            document.getElementById('fullName').value = user.name;
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('email').value = user.email;
+            document.getElementById('address').value = user.address || '';
+
+            loadOrderSummary();
+        });
+
+        function loadOrderSummary() {
+            const cart = Storage.getCart();
+            const summaryItems = document.getElementById('summaryItems');
+            
+            summaryItems.innerHTML = cart.map(item => `
+                <div class="summary-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="summary-item-info">
+                        <h4>${item.name}</h4>
+                        <p>Qty: ${item.quantity} × ${formatPrice(item.price)}</p>
+                    </div>
+                    <div class="summary-item-total">
+                        ${formatPrice(item.price * item.quantity)}
+                    </div>
+                </div>
+            `).join('');
+
+            // Calculate totals
+            const subtotal = calculateCartTotal(cart);
+            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+            
+            // Check for applied coupon
+            let discount = 0;
+            const appliedCouponData = localStorage.getItem('appliedCoupon');
+            if (appliedCouponData) {
+                const coupon = JSON.parse(appliedCouponData);
+                const result = applyCoupon(coupon.code, subtotal);
+                if (result.success) {
+                    discount = result.discount;
+                }
+            }
+            
+            const total = subtotal + shipping - discount;
+            
+            document.getElementById('summarySubtotal').textContent = formatPrice(subtotal);
+            document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : formatPrice(shipping);
+            document.getElementById('summaryTotal').textContent = formatPrice(total);
+            
+            if (discount > 0) {
+                document.getElementById('summaryDiscountRow').style.display = 'flex';
+                document.getElementById('summaryDiscount').textContent = formatPrice(discount);
+            }
+        }
+
+        function handleCheckout(event) {
+            event.preventDefault();
+            
+            const user = Storage.getCurrentUser();
+            const cart = Storage.getCart();
+            
+            // Get form data
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                district: document.getElementById('district').value,
+                zipCode: document.getElementById('zipCode').value,
+                paymentMethod: document.querySelector('input[name="payment"]:checked').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            // Calculate totals
+            const subtotal = calculateCartTotal(cart);
+            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+            
+            let discount = 0;
+            let couponCode = null;
+            const appliedCouponData = localStorage.getItem('appliedCoupon');
+            if (appliedCouponData) {
+                const coupon = JSON.parse(appliedCouponData);
+                const result = applyCoupon(coupon.code, subtotal);
+                if (result.success) {
+                    discount = result.discount;
+                    couponCode = coupon.code;
+                }
+            }
+            
+            const total = subtotal + shipping - discount;
+            
+            // Create order
+            const order = {
+                id: generateOrderId(),
+                userId: user.id,
+                items: cart,
+                shippingInfo: formData,
+                subtotal: subtotal,
+                shipping: shipping,
+                discount: discount,
+                couponCode: couponCode,
+                total: total,
+                status: 'pending',
+                paymentMethod: formData.paymentMethod,
+                orderDate: new Date().toISOString(),
+                expectedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Save order
+            Storage.addOrder(order);
+            
+            // Clear cart and coupon
+            Storage.clearCart();
+            localStorage.removeItem('appliedCoupon');
+            
+            // Show success message and redirect
+            showAlert('Order placed successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = `order-confirmation.html?orderId=${order.id}`;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

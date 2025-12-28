@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .confirmation-page {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        .order-details {
+            text-align: left;
+            margin: 30px 0;
+            padding: 25px;
+            background: var(--light-color);
+            border-radius: 10px;
+        }
+        .order-details p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <a href="../index.html"><i class="fas fa-shopping-bag"></i><span>BrickBD</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="confirmation-page">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1>Order Placed Successfully!</h1>
+            <p>Thank you for your purchase. Your order has been received and is being processed.</p>
+            
+            <div class="order-details" id="orderDetails">
+                <!-- Order details will be loaded here -->
+            </div>
+            
+            <div class="action-buttons">
+                <a href="track-order.html" class="btn btn-primary">Track Order</a>
+                <a href="../index.html" class="btn btn-secondary">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderId = getUrlParameter('orderId');
+            if (!orderId) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            const orders = Storage.getOrders();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                document.getElementById('orderDetails').innerHTML = '<p>Order not found</p>';
+                return;
+            }
+            
+            document.getElementById('orderDetails').innerHTML = `
+                <p><strong>Order ID:</strong> ${order.id}</p>
+                <p><strong>Order Date:</strong> ${formatDate(order.orderDate)}</p>
+                <p><strong>Total Amount:</strong> ${formatPrice(order.total)}</p>
+                <p><strong>Payment Method:</strong> ${order.paymentMethod.toUpperCase()}</p>
+                <p><strong>Status:</strong> <span style="color: var(--warning-color); font-weight: bold;">Pending</span></p>
+                <p><strong>Expected Delivery:</strong> ${formatDate(order.expectedDelivery)}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
