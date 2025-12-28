@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bdhotels - Find Your Perfect Stay in Bangladesh</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>Bdhotels</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="search-hotels.php">Hotels</a></li>
+                    <li><a href="user-login.php">User Login</a></li>
+                    <li><a href="admin-login.php">Admin Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Find your next stay in Bangladesh</h1>
+                <p>Search deals on hotels, homes, and much more...</p>
+                
+                <!-- Search Form -->
+                <form class="search-form" action="search-hotels.php" method="GET">
+                    <div class="search-box">
+                        <div class="search-field">
+                            <label>Where are you going?</label>
+                            <input type="text" name="location" placeholder="City, district, or place" required>
+                        </div>
+                        <div class="search-field">
+                            <label>Check-in</label>
+                            <input type="date" name="check_in" id="check_in" required>
+                        </div>
+                        <div class="search-field">
+                            <label>Check-out</label>
+                            <input type="date" name="check_out" id="check_out" required>
+                        </div>
+                        <div class="search-field">
+                            <label>Rooms</label>
+                            <select name="rooms">
+                                <option value="1">1 Room</option>
+                                <option value="2">2 Rooms</option>
+                                <option value="3">3 Rooms</option>
+                                <option value="4">4 Rooms</option>
+                                <option value="5">5+ Rooms</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Hotels Section -->
+    <section class="featured-hotels">
+        <div class="container">
+            <h2>Featured Hotels & Tourist Spots in Bangladesh</h2>
+            <div class="hotels-grid" id="featuredHotels">
+                <!-- Hotels will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="destinations">
+        <div class="container">
+            <h2>Popular Destinations</h2>
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Cox+Bazar" alt="Cox's Bazar">
+                    <div class="destination-info">
+                        <h3>Cox's Bazar</h3>
+                        <p>World's longest natural sea beach</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Sundarbans" alt="Sundarbans">
+                    <div class="destination-info">
+                        <h3>Sundarbans</h3>
+                        <p>Largest mangrove forest in the world</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Sylhet" alt="Sylhet">
+                    <div class="destination-info">
+                        <h3>Sylhet</h3>
+                        <p>Land of tea gardens and natural beauty</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Dhaka" alt="Dhaka">
+                    <div class="destination-info">
+                        <h3>Dhaka</h3>
+                        <p>Capital city with rich history and culture</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Saint+Martin" alt="Saint Martin">
+                    <div class="destination-info">
+                        <h3>Saint Martin</h3>
+                        <p>Only coral island of Bangladesh</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="https://via.placeholder.com/300x200?text=Chittagong" alt="Chittagong">
+                    <div class="destination-info">
+                        <h3>Chittagong Hill Tracts</h3>
+                        <p>Beautiful hills and tribal culture</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Bdhotels</h3>
+                    <p>Your trusted partner for hotel bookings in Bangladesh</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="search-hotels.php">Search Hotels</a></li>
+                        <li><a href="user-register.php">Register</a></li>
+                        <li><a href="user-login.php">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bdhotels. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

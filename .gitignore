@@ -1,0 +1,33 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# PHP
+*.log
+.phpunit.result.cache
+
+# Database
+*.sql.backup
+*.db
+
+# Uploads (if you add upload functionality)
+uploads/*
+!uploads/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment files (if you create them)
+.env
+config.local.php
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
