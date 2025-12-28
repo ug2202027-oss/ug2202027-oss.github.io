@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-content">
+                    <div class="contact-info">
+                        <span><i class="fas fa-phone"></i> +880 1234-567890</span>
+                        <span><i class="fas fa-envelope"></i> support@brickbd.me</span>
+                    </div>
+                    <div class="user-actions">
+                        <a href="login.html" id="authLink">Login / Register</a>
+                        <span id="userGreeting" style="display: none;">Welcome, <span id="userName"></span> | <a href="#" id="logoutLink">Logout</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <a href="../index.html">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>BrickBD</span>
+                        </a>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search for products...">
+                        <button id="searchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="nav-icons">
+                        <a href="wishlist.html" class="nav-icon">
+                            <i class="fas fa-heart"></i>
+                            <span class="badge" id="wishlistCount">0</span>
+                        </a>
+                        <a href="cart.html" class="nav-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge" id="cartCount">0</span>
+                        </a>
+                        <a href="profile.html" class="nav-icon">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="main-nav">
+            <div class="container">
+                <ul class="nav-menu">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="products.html" class="active"><i class="fas fa-list"></i> All Products</a></li>
+                    <li class="dropdown">
+                        <a href="#"><i class="fas fa-tags"></i> Categories <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="?category=electronics">Electronics</a></li>
+                            <li><a href="?category=fashion">Fashion</a></li>
+                            <li><a href="?category=home">Home & Living</a></li>
+                            <li><a href="?category=books">Books</a></li>
+                            <li><a href="?category=sports">Sports</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="deals.html"><i class="fas fa-fire"></i> Hot Deals</a></li>
+                    <li><a href="vendors.html"><i class="fas fa-store"></i> Local Vendors</a></li>
+                    <li><a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="products-page">
+            <!-- Sidebar Filters -->
+            <aside class="filters-sidebar">
+                <h3><i class="fas fa-filter"></i> Filters</h3>
+                
+                <!-- Category Filter -->
+                <div class="filter-section">
+                    <h4>Category</h4>
+                    <div class="filter-options" id="categoryFilters">
+                        <!-- Dynamically loaded -->
+                    </div>
+                </div>
+                
+                <!-- Price Filter -->
+                <div class="filter-section">
+                    <h4>Price Range</h4>
+                    <div class="price-inputs">
+                        <input type="number" id="minPrice" placeholder="Min" min="0">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" placeholder="Max" min="0">
+                    </div>
+                </div>
+                
+                <!-- Rating Filter -->
+                <div class="filter-section">
+                    <h4>Rating</h4>
+                    <div class="filter-options">
+                        <label><input type="radio" name="rating" value="4"> 4★ & above</label>
+                        <label><input type="radio" name="rating" value="3"> 3★ & above</label>
+                        <label><input type="radio" name="rating" value="2"> 2★ & above</label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn btn-secondary btn-block" onclick="clearFilters()">Clear All</button>
+            </aside>
+            
+            <!-- Products Content -->
+            <div class="products-content">
+                <div class="products-header">
+                    <div class="results-info">
+                        <h2 id="pageTitle">All Products</h2>
+                        <p id="resultsCount">Loading products...</p>
+                    </div>
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select id="sortSelect" onchange="sortProducts()">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="products-grid" id="productsContainer">
+                    <!-- Products will be loaded here -->
+                </div>
+                
+                <div id="noResults" style="display: none; text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-search" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
+                    <h3>No Products Found</h3>
+                    <p>Try adjusting your filters or search terms</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About BrickBD</h3>
+                    <p>Your trusted e-commerce platform connecting local vendors with customers across Bangladesh.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="deals.html">Hot Deals</a></li>
+                        <li><a href="vendors.html">Local Vendors</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BrickBD. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        let currentFilters = {
+            category: null,
+            search: null,
+            minPrice: null,
+            maxPrice: null,
+            minRating: null,
+            sort: 'newest'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategoryFilters();
+            loadProductsFromURL();
+        });
+
+        function loadCategoryFilters() {
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = categoriesDB.map(cat => `
+                <label>
+                    <input type="checkbox" value="${cat.id}" onchange="toggleCategory('${cat.id}')">
+                    ${cat.name} (${cat.count})
+                </label>
+            `).join('');
+        }
+
+        function loadProductsFromURL() {
+            // Get URL parameters
+            const category = getUrlParameter('category');
+            const search = getUrlParameter('search');
+            
+            if (category) {
+                currentFilters.category = category;
+                // Check the category checkbox
+                const checkbox = document.querySelector(`input[value="${category}"]`);
+                if (checkbox) checkbox.checked = true;
+                
+                const catData = categoriesDB.find(c => c.id === category);
+                document.getElementById('pageTitle').textContent = catData ? catData.name : 'Products';
+            }
+            
+            if (search) {
+                currentFilters.search = search;
+                document.getElementById('pageTitle').textContent = `Search: "${search}"`;
+                document.getElementById('searchInput').value = search;
+            }
+            
+            loadProducts();
+        }
+
+        function loadProducts() {
+            const container = document.getElementById('productsContainer');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            const products = Storage.getProducts();
+            const filtered = filterProducts(products, currentFilters);
+            
+            if (filtered.length === 0) {
+                container.style.display = 'none';
+                noResults.style.display = 'block';
+                resultsCount.textContent = '0 products found';
+            } else {
+                container.style.display = 'grid';
+                noResults.style.display = 'none';
+                resultsCount.textContent = `${filtered.length} products found`;
+                container.innerHTML = filtered.map(product => createProductCard(product)).join('');
+            }
+        }
+
+        function toggleCategory(categoryId) {
+            currentFilters.category = categoryId;
+            loadProducts();
+        }
+
+        function applyFilters() {
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+            const rating = document.querySelector('input[name="rating"]:checked');
+            
+            currentFilters.minPrice = minPrice ? parseInt(minPrice) : null;
+            currentFilters.maxPrice = maxPrice ? parseInt(maxPrice) : null;
+            currentFilters.minRating = rating ? parseFloat(rating.value) : null;
+            
+            loadProducts();
+        }
+
+        function clearFilters() {
+            // Reset form
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            
+            // Reset filters except URL params
+            const urlCategory = getUrlParameter('category');
+            const urlSearch = getUrlParameter('search');
+            
+            currentFilters = {
+                category: urlCategory,
+                search: urlSearch,
+                minPrice: null,
+                maxPrice: null,
+                minRating: null,
+                sort: 'newest'
+            };
+            
+            if (urlCategory) {
+                const checkbox = document.querySelector(`input[value="${urlCategory}"]`);
+                if (checkbox) checkbox.checked = true;
+            }
+            
+            loadProducts();
+        }
+
+        function sortProducts() {
+            currentFilters.sort = document.getElementById('sortSelect').value;
+            loadProducts();
+        }
+    </script>
+</body>
+</html>

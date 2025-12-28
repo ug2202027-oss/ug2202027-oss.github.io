@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo"><a href="../index.html"><i class="fas fa-shopping-bag"></i><span>BrickBD</span></a></div>
+                    <div class="nav-icons">
+                        <a href="wishlist.html" class="nav-icon active"><i class="fas fa-heart"></i><span class="badge" id="wishlistCount">0</span></a>
+                        <a href="cart.html" class="nav-icon"><i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 style="margin: 30px 0;">My Wishlist</h1>
+        <div class="products-grid" id="wishlistProducts"></div>
+        <div id="emptyWishlist" style="display: none; text-align: center; padding: 100px 20px;">
+            <i class="fas fa-heart" style="font-size: 5rem; color: #ddd; margin-bottom: 20px;"></i>
+            <h2>Your wishlist is empty</h2>
+            <p>Add products you love to your wishlist!</p>
+            <a href="products.html" class="btn btn-primary" style="margin-top: 20px;">Browse Products</a>
+        </div>
+    </div>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWishlist();
+        });
+
+        function loadWishlist() {
+            const wishlist = Storage.getWishlist();
+            const products = Storage.getProducts();
+            const wishlistProducts = products.filter(p => wishlist.includes(p.id));
+            
+            const container = document.getElementById('wishlistProducts');
+            const emptyDiv = document.getElementById('emptyWishlist');
+            
+            if (wishlistProducts.length === 0) {
+                container.style.display = 'none';
+                emptyDiv.style.display = 'block';
+            } else {
+                container.style.display = 'grid';
+                emptyDiv.style.display = 'none';
+                container.innerHTML = wishlistProducts.map(product => createProductCard(product)).join('');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .track-page { max-width: 900px; margin: 40px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: var(--shadow); }
+        .search-section { margin-bottom: 40px; }
+        .search-box { display: flex; gap: 10px; max-width: 500px; }
+        .search-box input { flex: 1; padding: 12px; border: 2px solid var(--border-color); border-radius: 5px; }
+        .order-track { margin-top: 30px; }
+        .order-info { background: var(--light-color); padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .timeline { position: relative; padding-left: 40px; }
+        .timeline-item { position: relative; padding-bottom: 30px; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-item::before { content: ''; position: absolute; left: -27px; width: 2px; height: 100%; background: var(--border-color); }
+        .timeline-icon { position: absolute; left: -40px; width: 30px; height: 30px; background: white; border: 3px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .timeline-item.completed .timeline-icon { background: var(--success-color); border-color: var(--success-color); color: white; }
+        .timeline-item.active .timeline-icon { background: var(--primary-color); border-color: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo"><a href="../index.html"><i class="fas fa-shopping-bag"></i><span>BrickBD</span></a></div>
+                    <div class="nav-icons">
+                        <a href="cart.html" class="nav-icon"><i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+                        <a href="profile.html" class="nav-icon"><i class="fas fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="track-page">
+            <h1>Track Your Order</h1>
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="orderIdInput" placeholder="Enter your Order ID">
+                    <button class="btn btn-primary" onclick="trackOrder()">Track</button>
+                </div>
+            </div>
+            <div id="trackingResult"></div>
+        </div>
+    </div>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        updateCartCount();
+        
+        function trackOrder() {
+            const orderId = document.getElementById('orderIdInput').value.trim();
+            if (!orderId) {
+                showAlert('Please enter an Order ID', 'info');
+                return;
+            }
+            
+            const orders = Storage.getOrders();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                document.getElementById('trackingResult').innerHTML = '<div class="alert alert-danger">Order not found. Please check your Order ID.</div>';
+                return;
+            }
+            
+            const statuses = ['pending', 'confirmed', 'shipped', 'delivered'];
+            const currentIndex = statuses.indexOf(order.status);
+            
+            document.getElementById('trackingResult').innerHTML = `
+                <div class="order-track">
+                    <div class="order-info">
+                        <h3>Order #${order.id}</h3>
+                        <p><strong>Order Date:</strong> ${formatDate(order.orderDate)}</p>
+                        <p><strong>Total:</strong> ${formatPrice(order.total)}</p>
+                        <p><strong>Expected Delivery:</strong> ${formatDate(order.expectedDelivery)}</p>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item ${currentIndex >= 0 ? 'completed' : ''}">
+                            <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                            <h4>Order Placed</h4>
+                            <p>Your order has been received</p>
+                        </div>
+                        <div class="timeline-item ${currentIndex >= 1 ? 'completed' : currentIndex === 0 ? 'active' : ''}">
+                            <div class="timeline-icon"><i class="fas fa-clipboard-check"></i></div>
+                            <h4>Order Confirmed</h4>
+                            <p>Your order has been confirmed and is being prepared</p>
+                        </div>
+                        <div class="timeline-item ${currentIndex >= 2 ? 'completed' : currentIndex === 1 ? 'active' : ''}">
+                            <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                            <h4>Shipped</h4>
+                            <p>Your order is on the way</p>
+                        </div>
+                        <div class="timeline-item ${currentIndex >= 3 ? 'completed' : currentIndex === 2 ? 'active' : ''}">
+                            <div class="timeline-icon"><i class="fas fa-home"></i></div>
+                            <h4>Delivered</h4>
+                            <p>Your order has been delivered</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

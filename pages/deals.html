@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Deals - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo"><a href="../index.html"><i class="fas fa-shopping-bag"></i><span>BrickBD</span></a></div>
+                    <div class="nav-icons">
+                        <a href="wishlist.html" class="nav-icon"><i class="fas fa-heart"></i><span class="badge" id="wishlistCount">0</span></a>
+                        <a href="cart.html" class="nav-icon"><i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div style="margin: 40px 0;">
+            <h1><i class="fas fa-fire"></i> Hot Deals</h1>
+            <p style="font-size: 1.1rem; color: #666; margin-top: 10px;">Limited time offers - Grab them before they're gone!</p>
+        </div>
+        <div class="products-grid" id="dealsContainer"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2025 BrickBD. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = Storage.getProducts();
+            const hotDeals = products.filter(p => p.hotDeal);
+            document.getElementById('dealsContainer').innerHTML = hotDeals.map(product => createProductCard(product)).join('');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - BrickBD</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/product-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-content">
+                    <div class="contact-info">
+                        <span><i class="fas fa-phone"></i> +880 1234-567890</span>
+                    </div>
+                    <div class="user-actions">
+                        <a href="login.html" id="authLink">Login / Register</a>
+                        <span id="userGreeting" style="display: none;">Welcome, <span id="userName"></span> | <a href="#" id="logoutLink">Logout</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <a href="../index.html"><i class="fas fa-shopping-bag"></i><span>BrickBD</span></a>
+                    </div>
+                    <div class="nav-icons">
+                        <a href="wishlist.html" class="nav-icon"><i class="fas fa-heart"></i><span class="badge" id="wishlistCount">0</span></a>
+                        <a href="cart.html" class="nav-icon"><i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+                        <a href="profile.html" class="nav-icon"><i class="fas fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><i class="fas fa-chevron-right"></i>
+            <a href="products.html">Products</a><i class="fas fa-chevron-right"></i>
+            <span id="productBreadcrumb">Product</span>
+        </div>
+
+        <div class="product-detail" id="productDetail">
+            <!-- Will be loaded dynamically -->
+        </div>
+
+        <div class="product-reviews" id="productReviews">
+            <h3><i class="fas fa-star"></i> Customer Reviews</h3>
+            <div id="reviewsList"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2025 BrickBD. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productId = parseInt(getUrlParameter('id'));
+            if (!productId) {
+                window.location.href = 'products.html';
+                return;
+            }
+            loadProductDetail(productId);
+            loadProductReviews(productId);
+        });
+
+        function loadProductDetail(productId) {
+            const products = Storage.getProducts();
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                document.getElementById('productDetail').innerHTML = '<p>Product not found</p>';
+                return;
+            }
+
+            document.getElementById('productBreadcrumb').textContent = product.name;
+            document.title = `${product.name} - BrickBD`;
+
+            const isInWishlist = Storage.isInWishlist(productId);
+            
+            document.getElementById('productDetail').innerHTML = `
+                <div class="product-image-section">
+                    <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="product-info-section">
+                    <h1>${product.name}</h1>
+                    <div class="product-rating">
+                        <span class="stars">${generateStars(product.rating)}</span>
+                        <span class="rating-text">${product.rating} (${product.reviews} reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">${formatPrice(product.price)}</span>
+                        ${product.originalPrice ? `<span class="original-price">${formatPrice(product.originalPrice)}</span>` : ''}
+                        ${product.discount ? `<span class="discount-badge">${product.discount}% OFF</span>` : ''}
+                    </div>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-meta">
+                        <p><strong>Category:</strong> ${product.category}</p>
+                        <p><strong>Vendor:</strong> <i class="fas fa-store"></i> ${product.vendor}</p>
+                        <p><strong>Stock:</strong> ${product.stock > 0 ? `<span class="in-stock">${product.stock} units available</span>` : '<span class="out-of-stock">Out of Stock</span>'}</p>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="addToCartHandler(${product.id})" ${product.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <button class="btn btn-secondary" onclick="toggleWishlist(${product.id})">
+                            <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i> ${isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadProductReviews(productId) {
+            const reviews = reviewsDB.filter(r => r.productId === productId);
+            const container = document.getElementById('reviewsList');
+            
+            if (reviews.length === 0) {
+                container.innerHTML = '<p class="no-reviews">No reviews yet. Be the first to review!</p>';
+                return;
+            }
+
+            container.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div>
+                            <strong>${review.userName}</strong>
+                            ${review.verified ? '<span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>' : ''}
+                        </div>
+                        <span class="review-date">${formatDate(review.date)}</span>
+                    </div>
+                    <div class="review-rating">${generateStars(review.rating)}</div>
+                    <p class="review-comment">${review.comment}</p>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
