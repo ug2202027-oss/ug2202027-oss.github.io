@@ -5,7 +5,7 @@ This repository contains the database structure documentation for the BrickBD ma
 ## Documentation
 
 - **[Database Structure](DATABASE.md)** - Complete ER diagram and table documentation
-- **[Live View](https://brickbd.me)** - Interactive database diagram visualization
+- **[Live View](https://brickbd.me)** - Interactive database diagram visualization (hosted via GitHub Pages)
 
 ## Overview
 
