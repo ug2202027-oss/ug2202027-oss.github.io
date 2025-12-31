@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrickBD - Database Structure</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        window.mermaid = mermaid;
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            er: {
+                useMaxWidth: true
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .diagram-container {
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        .mermaid {
+            text-align: center;
+        }
+        .description {
+            margin-top: 30px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .description h2 {
+            color: #333;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .description ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BrickBD Database Structure</h1>
+        <p class="subtitle">Entity Relationship Diagram for the BrickBD Marketplace System</p>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+erDiagram
+  USERS {
+    INT id PK
+    VARCHAR username UK
+    VARCHAR password_hash
+    VARCHAR fullname
+    VARCHAR email
+    ENUM type
+    ENUM seller_status
+    VARCHAR district
+    VARCHAR address
+    VARCHAR phone
+    VARCHAR trade_license_no
+    TINYINT is_subadmin
+    TIMESTAMP created_at
+  }
+
+  BRICKS {
+    INT id PK
+    INT seller_id FK
+    VARCHAR name
+    TEXT description
+    DECIMAL price
+    INT quantity
+    VARCHAR image
+    VARCHAR photo_detail
+    TIMESTAMP created_at
+  }
+
+  BRICK_IMAGES {
+    INT id PK
+    INT brick_id FK
+    VARCHAR file_path
+    VARCHAR caption
+    INT sort_order
+    TIMESTAMP created_at
+  }
+
+  ORDERS {
+    INT id PK
+    INT customer_id FK
+    DECIMAL total_price
+    INT total_quantity
+    VARCHAR payment_method
+    VARCHAR payment_reference
+    ENUM payment_status
+    TIMESTAMP created_at
+  }
+
+  ORDER_ITEMS {
+    INT id PK
+    INT order_id FK
+    INT brick_id FK
+    INT quantity
+    DECIMAL price
+  }
+
+  BRICK_COMMENTS {
+    INT id PK
+    INT brick_id FK
+    INT customer_id FK
+    TEXT comment
+    TIMESTAMP created_at
+  }
+
+  BRICK_RATINGS {
+    INT id PK
+    INT brick_id FK
+    INT customer_id FK
+    TINYINT rating
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  SELLER_RATINGS {
+    INT id PK
+    INT seller_id FK
+    INT customer_id FK
+    TINYINT rating
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  REPORTS {
+    INT id PK
+    INT reporter_id FK
+    ENUM subject_type
+    INT subject_id
+    TEXT details
+    ENUM status
+    INT admin_id FK
+    TEXT admin_note
+    TIMESTAMP created_at
+    TIMESTAMP solved_at
+  }
+
+  NOTIFICATIONS {
+    INT id PK
+    INT user_id FK
+    VARCHAR title
+    TEXT message
+    INT related_report_id FK
+    TINYINT is_read
+    TIMESTAMP created_at
+  }
+
+  CHAT_THREADS {
+    INT id PK
+    INT customer_id FK
+    INT seller_id FK
+    TIMESTAMP created_at
+    TIMESTAMP last_message_at
+  }
+
+  CHAT_MESSAGES {
+    INT id PK
+    INT thread_id FK
+    INT sender_id FK
+    TEXT message
+    TIMESTAMP created_at
+  }
+
+  %% Relationships
+  USERS ||--o{ BRICKS : sells
+  USERS ||--o{ ORDERS : places
+  ORDERS ||--o{ ORDER_ITEMS : contains
+  BRICKS ||--o{ ORDER_ITEMS : included_in
+
+  BRICKS ||--o{ BRICK_IMAGES : has
+  BRICKS ||--o{ BRICK_COMMENTS : has
+  USERS ||--o{ BRICK_COMMENTS : writes
+
+  BRICKS ||--o{ BRICK_RATINGS : has
+  USERS ||--o{ BRICK_RATINGS : rates
+
+  USERS ||--o{ SELLER_RATINGS : receives_as_seller
+  USERS ||--o{ SELLER_RATINGS : gives_as_customer
+
+  USERS ||--o{ REPORTS : reports
+  USERS |o--o{ REPORTS : handles_as_admin
+
+  USERS ||--o{ NOTIFICATIONS : gets
+  REPORTS |o--o{ NOTIFICATIONS : relates
+
+  USERS ||--o{ CHAT_THREADS : customer
+  USERS ||--o{ CHAT_THREADS : seller
+  CHAT_THREADS ||--o{ CHAT_MESSAGES : has
+  USERS ||--o{ CHAT_MESSAGES : sends
+            </div>
+        </div>
+
+        <div class="description">
+            <h2>Database Overview</h2>
+            <p>This database structure supports a comprehensive brick marketplace system with the following key features:</p>
+            <ul>
+                <li><strong>User Management:</strong> Supports multiple user types including customers, sellers, and sub-admins</li>
+                <li><strong>Product Catalog:</strong> Bricks with multiple images, descriptions, and pricing</li>
+                <li><strong>E-commerce:</strong> Order processing with payment tracking and order items</li>
+                <li><strong>Reviews & Ratings:</strong> Customer feedback for both products (bricks) and sellers</li>
+                <li><strong>Communication:</strong> Real-time chat between customers and sellers</li>
+                <li><strong>Moderation:</strong> Reporting system with admin handling and notifications</li>
+            </ul>
+
+            <h2>Key Tables</h2>
+            <ul>
+                <li><strong>USERS:</strong> Central user management with support for different user types and seller verification</li>
+                <li><strong>BRICKS:</strong> Product catalog with seller association</li>
+                <li><strong>ORDERS & ORDER_ITEMS:</strong> Shopping cart and order management</li>
+                <li><strong>CHAT_THREADS & CHAT_MESSAGES:</strong> Customer-seller communication system</li>
+                <li><strong>REPORTS & NOTIFICATIONS:</strong> Content moderation and user notification system</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
