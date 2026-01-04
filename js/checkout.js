@@ -15,16 +15,32 @@ function loadCheckoutItems() {
         return;
     }
     
-    checkoutItems.innerHTML = cart.map(item => `
-        <div class="checkout-item">
-            <div>
-                <strong>${item.name}</strong>
-                <br>
-                <small>Qty: ${item.quantity}</small>
-            </div>
-            <div>$${(item.price * item.quantity).toFixed(2)}</div>
-        </div>
-    `).join('');
+    // Clear items first
+    checkoutItems.innerHTML = '';
+    
+    // Create checkout items using DOM methods to avoid XSS
+    cart.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'checkout-item';
+        
+        const detailsDiv = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.textContent = item.name;
+        detailsDiv.appendChild(strong);
+        detailsDiv.appendChild(document.createElement('br'));
+        
+        const small = document.createElement('small');
+        small.textContent = `Qty: ${item.quantity}`;
+        detailsDiv.appendChild(small);
+        
+        const priceDiv = document.createElement('div');
+        priceDiv.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+        
+        itemDiv.appendChild(detailsDiv);
+        itemDiv.appendChild(priceDiv);
+        
+        checkoutItems.appendChild(itemDiv);
+    });
     
     calculateCheckoutSummary();
 }
@@ -111,17 +127,60 @@ async function placeOrder() {
 function showOrderSuccess(orderId) {
     const checkoutPage = document.querySelector('.checkout-page .container');
     
-    checkoutPage.innerHTML = `
-        <div style="text-align: center; padding: 4rem 0;">
-            <div style="font-size: 5rem; color: #067d62; margin-bottom: 1rem;">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>Order Placed Successfully!</h2>
-            <p style="font-size: 1.2rem; margin: 1rem 0;">Thank you for your purchase.</p>
-            <p style="color: #666;">Order ID: <strong>${orderId}</strong></p>
-            <p style="color: #666; margin-bottom: 2rem;">A confirmation email has been sent to your email address.</p>
-            <a href="products.html" class="btn-primary">Continue Shopping</a>
-            <a href="index.html" class="btn-secondary">Go to Home</a>
-        </div>
-    `;
+    // Clear page content
+    checkoutPage.innerHTML = '';
+    
+    // Create success div
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = 'text-align: center; padding: 4rem 0;';
+    
+    // Icon div
+    const iconDiv = document.createElement('div');
+    iconDiv.style.cssText = 'font-size: 5rem; color: #067d62; margin-bottom: 1rem;';
+    iconDiv.innerHTML = '<i class="fas fa-check-circle"></i>';
+    
+    // Title
+    const title = document.createElement('h2');
+    title.textContent = 'Order Placed Successfully!';
+    
+    // Thank you message
+    const thankYou = document.createElement('p');
+    thankYou.style.cssText = 'font-size: 1.2rem; margin: 1rem 0;';
+    thankYou.textContent = 'Thank you for your purchase.';
+    
+    // Order ID
+    const orderIdP = document.createElement('p');
+    orderIdP.style.color = '#666';
+    orderIdP.textContent = 'Order ID: ';
+    const orderIdStrong = document.createElement('strong');
+    orderIdStrong.textContent = orderId;
+    orderIdP.appendChild(orderIdStrong);
+    
+    // Email confirmation
+    const emailP = document.createElement('p');
+    emailP.style.cssText = 'color: #666; margin-bottom: 2rem;';
+    emailP.textContent = 'A confirmation email has been sent to your email address.';
+    
+    // Buttons
+    const continueBtn = document.createElement('a');
+    continueBtn.href = 'products.html';
+    continueBtn.className = 'btn-primary';
+    continueBtn.textContent = 'Continue Shopping';
+    
+    const homeBtn = document.createElement('a');
+    homeBtn.href = 'index.html';
+    homeBtn.className = 'btn-secondary';
+    homeBtn.textContent = 'Go to Home';
+    
+    // Append all elements
+    successDiv.appendChild(iconDiv);
+    successDiv.appendChild(title);
+    successDiv.appendChild(thankYou);
+    successDiv.appendChild(orderIdP);
+    successDiv.appendChild(emailP);
+    successDiv.appendChild(continueBtn);
+    successDiv.appendChild(document.createTextNode(' '));
+    successDiv.appendChild(homeBtn);
+    
+    checkoutPage.appendChild(successDiv);
 }
