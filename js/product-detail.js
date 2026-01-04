@@ -39,49 +39,110 @@ function displayProductDetail(product) {
     }
     
     if (detailContent) {
-        detailContent.innerHTML = `
-            <div class="product-detail-image">${product.image || '📦'}</div>
-            <div class="product-detail-info">
-                <h1>${product.name}</h1>
-                <div class="product-rating">${getRatingStars(product.rating)}</div>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                
-                <div class="product-description">
-                    <h3>Product Description</h3>
-                    <p>This is a high-quality ${product.name.toLowerCase()} that offers exceptional value and performance. 
-                    Perfect for daily use, it combines style, functionality, and durability.</p>
-                    <ul>
-                        <li>Premium quality materials</li>
-                        <li>Modern design</li>
-                        <li>Long-lasting durability</li>
-                        <li>Easy to use</li>
-                        <li>Excellent customer reviews</li>
-                    </ul>
-                </div>
-                
-                <div class="quantity-selector">
-                    <label>Quantity:</label>
-                    <button onclick="changeQuantity(-1)">-</button>
-                    <input type="number" id="quantity" value="1" min="1" max="10" readonly>
-                    <button onclick="changeQuantity(1)">+</button>
-                </div>
-                
-                <div class="product-actions">
-                    <button class="btn-primary" onclick="addToCartFromDetail()">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                    <button class="btn-secondary" onclick="buyNow()">
-                        <i class="fas fa-bolt"></i> Buy Now
-                    </button>
-                </div>
-                
-                <div class="product-meta">
-                    <p><strong>Category:</strong> ${product.category}</p>
-                    <p><strong>SKU:</strong> ${product.id.toString().padStart(6, '0')}</p>
-                    <p><strong>Availability:</strong> <span style="color: #067d62">In Stock</span></p>
-                </div>
-            </div>
+        // Clear content
+        detailContent.innerHTML = '';
+        
+        // Create image div
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'product-detail-image';
+        imageDiv.textContent = product.image || '📦';
+        
+        // Create info div
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'product-detail-info';
+        
+        // Title
+        const title = document.createElement('h1');
+        title.textContent = product.name;
+        
+        // Rating
+        const rating = document.createElement('div');
+        rating.className = 'product-rating';
+        rating.innerHTML = getRatingStars(product.rating);
+        
+        // Price
+        const price = document.createElement('div');
+        price.className = 'product-price';
+        price.textContent = `$${product.price.toFixed(2)}`;
+        
+        // Description
+        const descDiv = document.createElement('div');
+        descDiv.className = 'product-description';
+        descDiv.innerHTML = `
+            <h3>Product Description</h3>
+            <p>This is a high-quality product that offers exceptional value and performance. 
+            Perfect for daily use, it combines style, functionality, and durability.</p>
+            <ul>
+                <li>Premium quality materials</li>
+                <li>Modern design</li>
+                <li>Long-lasting durability</li>
+                <li>Easy to use</li>
+                <li>Excellent customer reviews</li>
+            </ul>
         `;
+        
+        // Quantity selector
+        const quantityDiv = document.createElement('div');
+        quantityDiv.className = 'quantity-selector';
+        quantityDiv.innerHTML = `
+            <label>Quantity:</label>
+            <button onclick="changeQuantity(-1)">-</button>
+            <input type="number" id="quantity" value="1" min="1" max="10" readonly>
+            <button onclick="changeQuantity(1)">+</button>
+        `;
+        
+        // Actions
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'product-actions';
+        actionsDiv.innerHTML = `
+            <button class="btn-primary" onclick="addToCartFromDetail()">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+            <button class="btn-secondary" onclick="buyNow()">
+                <i class="fas fa-bolt"></i> Buy Now
+            </button>
+        `;
+        
+        // Meta
+        const metaDiv = document.createElement('div');
+        metaDiv.className = 'product-meta';
+        const categoryP = document.createElement('p');
+        const categoryStrong = document.createElement('strong');
+        categoryStrong.textContent = 'Category: ';
+        categoryP.appendChild(categoryStrong);
+        categoryP.appendChild(document.createTextNode(product.category));
+        
+        const skuP = document.createElement('p');
+        const skuStrong = document.createElement('strong');
+        skuStrong.textContent = 'SKU: ';
+        skuP.appendChild(skuStrong);
+        skuP.appendChild(document.createTextNode(product.id.toString().padStart(6, '0')));
+        
+        const availP = document.createElement('p');
+        const availStrong = document.createElement('strong');
+        availStrong.textContent = 'Availability: ';
+        const availSpan = document.createElement('span');
+        availSpan.style.color = '#067d62';
+        availSpan.textContent = 'In Stock';
+        availP.appendChild(availStrong);
+        availP.appendChild(availSpan);
+        
+        metaDiv.appendChild(categoryP);
+        metaDiv.appendChild(skuP);
+        metaDiv.appendChild(availP);
+        
+        // Append all to info div
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(rating);
+        infoDiv.appendChild(price);
+        infoDiv.appendChild(descDiv);
+        infoDiv.appendChild(quantityDiv);
+        infoDiv.appendChild(actionsDiv);
+        infoDiv.appendChild(metaDiv);
+        
+        // Append to detail content
+        detailContent.appendChild(imageDiv);
+        detailContent.appendChild(infoDiv);
         
         // Store current product for later use
         window.currentProduct = product;
@@ -149,22 +210,62 @@ function displayRelatedProducts(products) {
         return;
     }
     
-    relatedGrid.innerHTML = products.map(product => `
-        <div class="product-card">
-            <div class="product-image">${product.image || '📦'}</div>
-            <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-rating">${getRatingStars(product.rating)}</div>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="product-actions">
-                    <button class="add-to-cart" onclick="addToCart({id: ${product.id}, name: '${product.name}', price: ${product.price}, image: '${product.image || '📦'}'})">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                    <button class="view-details" onclick="viewProduct(${product.id})">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    // Clear grid first
+    relatedGrid.innerHTML = '';
+    
+    // Create product cards using DOM methods to avoid XSS
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'product-image';
+        imageDiv.textContent = product.image || '📦';
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'product-info';
+        
+        const title = document.createElement('h3');
+        title.className = 'product-title';
+        title.textContent = product.name;
+        
+        const rating = document.createElement('div');
+        rating.className = 'product-rating';
+        rating.innerHTML = getRatingStars(product.rating);
+        
+        const price = document.createElement('div');
+        price.className = 'product-price';
+        price.textContent = `$${product.price.toFixed(2)}`;
+        
+        const actions = document.createElement('div');
+        actions.className = 'product-actions';
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-to-cart';
+        addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+        addBtn.onclick = () => addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image || '📦'
+        });
+        
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'view-details';
+        viewBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+        viewBtn.onclick = () => viewProduct(product.id);
+        
+        actions.appendChild(addBtn);
+        actions.appendChild(viewBtn);
+        
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(rating);
+        infoDiv.appendChild(price);
+        infoDiv.appendChild(actions);
+        
+        card.appendChild(imageDiv);
+        card.appendChild(infoDiv);
+        
+        relatedGrid.appendChild(card);
+    });
 }

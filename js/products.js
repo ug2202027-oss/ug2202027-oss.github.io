@@ -30,7 +30,10 @@ async function loadProducts() {
         displayProducts(filteredProducts);
         
         // Load featured products on home page
-        if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+        const isHomePage = window.location.pathname.endsWith('/') || 
+                          window.location.pathname.endsWith('/index.html') ||
+                          document.getElementById('featuredProducts') !== null;
+        if (isHomePage) {
             displayFeaturedProducts();
         }
     } catch (error) {
@@ -51,24 +54,64 @@ function displayProducts(products) {
         return;
     }
     
-    productGrid.innerHTML = products.map(product => `
-        <div class="product-card">
-            <div class="product-image">${product.image || '📦'}</div>
-            <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-rating">${getRatingStars(product.rating)}</div>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="product-actions">
-                    <button class="add-to-cart" onclick="addToCart({id: ${product.id}, name: '${product.name}', price: ${product.price}, image: '${product.image || '📦'}'})">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                    <button class="view-details" onclick="viewProduct(${product.id})">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    // Clear grid first
+    productGrid.innerHTML = '';
+    
+    // Create product cards using DOM methods to avoid XSS
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'product-image';
+        imageDiv.textContent = product.image || '📦';
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'product-info';
+        
+        const title = document.createElement('h3');
+        title.className = 'product-title';
+        title.textContent = product.name;
+        
+        const rating = document.createElement('div');
+        rating.className = 'product-rating';
+        rating.innerHTML = getRatingStars(product.rating);
+        
+        const price = document.createElement('div');
+        price.className = 'product-price';
+        price.textContent = `$${product.price.toFixed(2)}`;
+        
+        const actions = document.createElement('div');
+        actions.className = 'product-actions';
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-to-cart';
+        addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+        addBtn.onclick = () => addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image || '📦'
+        });
+        
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'view-details';
+        viewBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+        viewBtn.onclick = () => viewProduct(product.id);
+        
+        actions.appendChild(addBtn);
+        actions.appendChild(viewBtn);
+        
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(rating);
+        infoDiv.appendChild(price);
+        infoDiv.appendChild(actions);
+        
+        card.appendChild(imageDiv);
+        card.appendChild(infoDiv);
+        
+        productGrid.appendChild(card);
+    });
 }
 
 // Display featured products on home page
@@ -81,24 +124,64 @@ function displayFeaturedProducts() {
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6);
     
-    featuredGrid.innerHTML = featured.map(product => `
-        <div class="product-card">
-            <div class="product-image">${product.image || '📦'}</div>
-            <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-rating">${getRatingStars(product.rating)}</div>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="product-actions">
-                    <button class="add-to-cart" onclick="addToCart({id: ${product.id}, name: '${product.name}', price: ${product.price}, image: '${product.image || '📦'}'})">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                    <button class="view-details" onclick="viewProduct(${product.id})">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    // Clear grid first
+    featuredGrid.innerHTML = '';
+    
+    // Create product cards using DOM methods to avoid XSS
+    featured.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'product-image';
+        imageDiv.textContent = product.image || '📦';
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'product-info';
+        
+        const title = document.createElement('h3');
+        title.className = 'product-title';
+        title.textContent = product.name;
+        
+        const rating = document.createElement('div');
+        rating.className = 'product-rating';
+        rating.innerHTML = getRatingStars(product.rating);
+        
+        const price = document.createElement('div');
+        price.className = 'product-price';
+        price.textContent = `$${product.price.toFixed(2)}`;
+        
+        const actions = document.createElement('div');
+        actions.className = 'product-actions';
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-to-cart';
+        addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+        addBtn.onclick = () => addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image || '📦'
+        });
+        
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'view-details';
+        viewBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+        viewBtn.onclick = () => viewProduct(product.id);
+        
+        actions.appendChild(addBtn);
+        actions.appendChild(viewBtn);
+        
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(rating);
+        infoDiv.appendChild(price);
+        infoDiv.appendChild(actions);
+        
+        card.appendChild(imageDiv);
+        card.appendChild(infoDiv);
+        
+        featuredGrid.appendChild(card);
+    });
 }
 
 // Filter products by category

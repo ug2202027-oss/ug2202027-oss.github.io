@@ -1,5 +1,6 @@
 // Configuration
 const API_BASE_URL = 'https://localhost:5001/api'; // .NET API endpoint
+const USE_MOCK_DATA_FALLBACK = true; // Set to false in production to avoid masking API issues
 
 // Cart management
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -133,8 +134,11 @@ async function apiRequest(endpoint, method = 'GET', data = null) {
         return await response.json();
     } catch (error) {
         console.error('API Request failed:', error);
-        // Return mock data for demo purposes
-        return getMockData(endpoint);
+        // Return mock data only if configured for demo purposes
+        if (USE_MOCK_DATA_FALLBACK) {
+            return getMockData(endpoint);
+        }
+        throw error;
     }
 }
 
